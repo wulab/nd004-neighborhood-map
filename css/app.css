@@ -2,6 +2,7 @@
 
 html {
     box-sizing: border-box;
+    height: 100%;
 }
 
 * {
@@ -10,6 +11,7 @@ html {
 
 body {
     font-family: Arial, Helvetica, sans-serif;
+    height: 100%;
 }
 
 figure {
@@ -76,7 +78,7 @@ a {
 
 .main {
     box-sizing: border-box;
-    height: calc(100vh - 44px);
+    height: calc(100% - 44px);
 }
 
 .main-flex {
@@ -100,24 +102,26 @@ a {
     border-top: 1px solid #cbcbcb;
 }
 
-.section-login,
 .section-first,
 .section-last {
     background-color: #f0f1f3;
     color: #000519;
 }
 
-.section-login {
-    height: 100vh;
-}
-
 .section-middle {
     background-color: #f9f8f9;
-    display: flex;
+    padding: 0;
 }
 
 .section-last {
     flex: 1 0 auto;
+}
+
+
+/* Map */
+
+.map {
+    height: 50vh;
 }
 
 
@@ -173,7 +177,7 @@ a {
     box-shadow: 0 4px 4px 1px rgba(0, 0, 0, 0.1);
     left: 0;
     margin: 0 auto;
-    opacity: 0.9;
+    opacity: 0.8;
     padding: 10px;
     position: fixed;
     right: 0;
@@ -210,7 +214,6 @@ a {
 
     .main-flex>.section-middle {
         flex: 1 1 768px;
-        flex-wrap: wrap;
     }
 
     .main-flex>.section-last {
@@ -231,11 +234,10 @@ a {
     }
 
 
-    /* Login Form */
+    /* Map */
 
-    .form-login {
-        padding: 40px;
-        width: 500px;
+    .map {
+        height: 100%;
     }
 
 
