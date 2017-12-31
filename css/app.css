@@ -119,6 +119,29 @@ a {
 }
 
 
+/* Location List */
+.location-list {
+    margin: 0;
+    margin-left: -5px;
+    padding-left: 0;
+    list-style: none;
+}
+
+.location-list>li {
+    display: inline-block;
+    padding: 0 10px;
+}
+
+.location-name {
+    display: block;
+}
+
+.location-hours {
+    color: #b8b6b8;
+    font-size: .8em;
+}
+
+
 /* Map */
 
 .map {
@@ -126,49 +149,7 @@ a {
 }
 
 
-/* Item Categories */
-
-.section-first>ul {
-    margin: 0;
-    margin-left: -5px;
-    padding-left: 0;
-    list-style: none;
-}
-
-.section-first>ul>li {
-    display: inline-block;
-    padding: 0 5px;
-}
-
-
-/* Item List */
-
-.item {
-    margin: 0 10px;
-    text-align: center;
-}
-
-.item .item-title {
-    display: none;
-    height: 2em;
-    margin: 10px 0;
-}
-
-.item .item-image {
-    max-height: 150px;
-    width: auto;
-}
-
-
-/* Item Details */
-
-.detail .detail-image {
-    height: auto;
-    max-width: 100%;
-}
-
-
-/* Bottom Notification */
+/* Notification */
 
 .notification {
     background-color: #d3d4d6;
@@ -244,30 +225,18 @@ a {
 
     /* Item Categories */
 
-    .section-first>ul {
+    .location-list {
         margin: 0;
         margin-top: -5px;
     }
 
-    .section-first>ul>li {
+    .location-list>li {
         display: list-item;
-        padding: 5px 0;
+        padding: 10px 0;
     }
 
 
-    /* Item List */
-
-    .item {
-        margin: 20px;
-        width: 180px;
-    }
-
-    .item>.item-title {
-        display: block;
-    }
-
-
-    /* Bottom Navigation */
+    /* Navigation */
 
     .notification {
         padding: 20px;
