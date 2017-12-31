@@ -3,15 +3,37 @@ var Notification = {
     message: null
 };
 
+var CategoryList = function () {
+    var self = this;
+    self.categories = ko.observableArray();
+    self.findByName = function (name) {
+        var categories = self.categories();
+        return categories.find(function (category) {
+            return category.name() === name;
+        });
+    };
+};
+
+var LocationList = function () {
+    this.locations = ko.observableArray();
+};
+
+var Category = function (data) {
+    this.name = ko.observable(data.name);
+    this.iconUrl = ko.observable(data.icon.prefix + '32' + data.icon.suffix);
+    this.locations = ko.observableArray();
+};
+
 var Location = function (data) {
     var hours = data.hours && data.hours.status;
-    // var icon = data.categories && data.categories[0].icon;
 
     this.name = ko.observable(data.name);
     this.hours = ko.observable(hours || 'Open');
     this.position = ko.observable(data.location);
-    // this.iconUrl = ko.observable(icon.prefix + 'bg_32' + icon.suffix);
 };
+
+var categoryList = new CategoryList();
+var locationList = new LocationList();
 
 // Octopus
 var Octopus = {
@@ -25,8 +47,6 @@ var Octopus = {
 
         Octopus.notify('Welcome to APP_NAME!');
     },
-
-    locationList: ko.observableArray(),
 
     getLocationRecommendations: function () {
         var params = {
@@ -48,10 +68,18 @@ var Octopus = {
             var items = data.response.groups[0].items;
 
             items.forEach(function (item) {
-                Octopus.locationList.push(new Location(item.venue));
+                var location = new Location(item.venue);
+                locationList.locations.push(location);
+
+                var category = categoryList.findByName(item.venue.categories[0].name);
+                if (!category) {
+                    category = new Category(item.venue.categories[0]);
+                    categoryList.categories.push(category);
+                }
+                category.locations.push(location);
             });
 
-            MapView.render();
+            MapView.render(locationList.locations);
         });
 
         request.fail(function (jqXHR, textStatus) {
@@ -90,14 +118,13 @@ var Octopus = {
 };
 
 // View Model
-var LocationListViewModel = function () {
-    var self = this;
-    self.locationList = Octopus.locationList;
-    self.handleClick = Octopus.animateLocationMarker;
+var CategoryListViewModel = function () {
+    this.categories = categoryList.categories;
+    this.handleClick = null;
 };
 
 var ViewModel = {
-    LocationList: LocationListViewModel
+    CategoryList: CategoryListViewModel
 };
 
 // View
@@ -133,19 +160,23 @@ var MapView = {
             }
         );
 
-        MapView.markersTable = {};
+        MapView.markers = [];
     },
 
-    render: function () {
-        Octopus.locationList().forEach(function (location) {
+    render: function (locations) {
+        MapView.markers.forEach(function (marker) {
+            marker.setMap(null);
+        });
+        MapView.markers = [];
+
+        locations().forEach(function (location) {
             var marker = new google.maps.Marker({
                 position: location.position(),
-                animation: null,
-                // icon: location.iconUrl(),
+                animation: google.maps.Animation.DROP,
                 map: MapView.map
             });
 
-            MapView.markersTable[location.name()] = marker;
+            MapView.markers.push(marker);
         });
     }
 };

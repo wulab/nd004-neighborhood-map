@@ -11,11 +11,13 @@
 
 <body>
   <main class="main main-flex">
-    <section class="section section-first" data-bind="with: LocationList">
-      <ul class="location-list" data-bind="foreach: locationList">
-        <li class="location">
-          <a class="location-name" data-bind="text: name, click: handleClick"></a>
-          <span class="location-hours" data-bind="text: hours"></span>
+    <section class="section section-first" data-bind="with: CategoryList">
+      <ul class="category-list" data-bind="foreach: categories">
+        <li class="category">
+          <a data-bind="click: handleClick">
+            <img class="category-icon" data-bind="attr: {src: iconUrl}">
+            <span class="category-name" data-bind="text: name"></span>
+          </a>
         </li>
       </ul>
     </section>
