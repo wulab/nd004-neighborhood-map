@@ -4,20 +4,17 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>APP_NAME</title>
+  <title>Neighborhood Map</title>
   <link rel="stylesheet" href="/css/normalize.css">
   <link rel="stylesheet" href="/css/app.css">
 </head>
 
 <body>
   <main class="main main-flex">
-    <section class="section section-first" data-bind="with: CategoryList">
-      <ul class="category-list" data-bind="foreach: categories">
+    <section class="section section-first">
+      <ul class="category-list" data-bind="foreach: allCategories">
         <li class="category">
-          <a data-bind="click: handleClick">
-            <img class="category-icon" data-bind="attr: {src: iconUrl}">
-            <span class="category-name" data-bind="text: name"></span>
-          </a>
+          <a class="category-name" data-bind="text: $data, click: $parent.selectedCategory"></a>
         </li>
       </ul>
     </section>
@@ -26,7 +23,19 @@
       <div class="map"></div>
     </section>
 
-    <section class="section section-last">
+    <section class="section section-last" data-bind="with: selectedLocation">
+      <article class="location">
+        <h2 class="location-name" data-bind="text: name"></h2>
+        <p class="location-category" data-bind="text: category"></p>
+        <p class="location-hours" data-bind="text: hours"></p>
+        <article class="location-tip" data-bind="foreach: tips">
+          <p class="location-tip-content" data-bind="text: content"></p>
+          <p class="location-tip-author">
+            –
+            <span data-bind="text: author"></span>
+          </p>
+        </article>
+      </article>
     </section>
   </main>
 

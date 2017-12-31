@@ -1,185 +1,107 @@
 // Model
-var Notification = {
-    message: null
-};
-
-var CategoryList = function () {
-    var self = this;
-    self.categories = ko.observableArray();
-    self.findByName = function (name) {
-        var categories = self.categories();
-        return categories.find(function (category) {
-            return category.name() === name;
-        });
-    };
-};
-
-var LocationList = function () {
-    this.locations = ko.observableArray();
-};
-
-var Category = function (data) {
-    this.name = ko.observable(data.name);
-    this.iconUrl = ko.observable(data.icon.prefix + '32' + data.icon.suffix);
-    this.locations = ko.observableArray();
-};
-
 var Location = function (data) {
-    var hours = data.hours && data.hours.status;
+    var self = this;
 
-    this.name = ko.observable(data.name);
-    this.hours = ko.observable(hours || 'Open');
-    this.position = ko.observable(data.location);
+    self.category = data.venue.categories[0].name;
+    self.marker = null;
+    self.name = data.venue.name;
+    self.position = data.venue.location;
+    self.hours = data.venue.hours && data.venue.hours.status;
+    self.tips = [];
+
+    data.tips.forEach(function (tip) {
+        self.tips.push({
+            content: tip.text,
+            author: [tip.user.firstName, tip.user.lastName].join(' ')
+        });
+    });
 };
 
-var categoryList = new CategoryList();
-var locationList = new LocationList();
-
-// Octopus
-var Octopus = {
-    init: function () {
-        Octopus.getLocationRecommendations();
-
-        MapView.init();
-        NotificationView.init();
-
-        ko.applyBindings(ViewModel);
-
-        Octopus.notify('Welcome to APP_NAME!');
-    },
-
-    getLocationRecommendations: function () {
-        var params = {
-            client_id: 'FOURSQUARE_CLIENT_ID',
-            client_secret: 'FOURSQUARE_CLIENT_SECRET',
-            ll: '13.7248936,100.493025',
-            radius: 5000,
-            section: 'topPicks',
-            v: '20171231'
-        };
-
-        var request = $.ajax({
-            dataType: 'json',
-            url: 'https://api.foursquare.com/v2/venues/explore',
-            data: params
-        });
-
-        request.done(function (data) {
-            var items = data.response.groups[0].items;
-
-            items.forEach(function (item) {
-                var location = new Location(item.venue);
-                locationList.locations.push(location);
-
-                var category = categoryList.findByName(item.venue.categories[0].name);
-                if (!category) {
-                    category = new Category(item.venue.categories[0]);
-                    categoryList.categories.push(category);
-                }
-                category.locations.push(location);
-            });
-
-            MapView.render(locationList.locations);
-        });
-
-        request.fail(function (jqXHR, textStatus) {
-            Octopus.notify('Failed to get location recommendations: ' + textStatus);
-        });
-    },
-
-    hasNotificationMessage: function () {
-        return Octopus.getNotificationMessage() !== null;
-    },
-
-    getNotificationMessage: function () {
-        return Notification.message;
-    },
-
-    notify: function (message) {
-        Notification.message = message;
-        NotificationView.render();
-        setTimeout(function () {
-            Notification.message = null;
-            NotificationView.render();
-        }, 3000);
-    },
-
-    animateLocationMarker: function (location) {
-        var marker = MapView.markersTable[location.name()];
-        if (marker.getAnimation() !== null) {
-            marker.setAnimation(null);
-        } else {
-            marker.setAnimation(google.maps.Animation.BOUNCE);
-            setTimeout(function () {
-                marker.setAnimation(null);
-            }, 1400);
-        }
-    }
-};
 
 // View Model
-var CategoryListViewModel = function () {
-    this.categories = categoryList.categories;
-    this.handleClick = null;
-};
+var ViewModel = function (map) {
+    var self = this;
 
-var ViewModel = {
-    CategoryList: CategoryListViewModel
-};
+    self.allLocations = ko.observableArray();
+    self.selectedLocation = ko.observable();
+    self.selectedCategory = ko.observable();
 
-// View
-var NotificationView = {
-    init: function () {
-        NotificationView.element = $('.notification');
-        NotificationView.render();
-    },
+    self.allCategories = ko.pureComputed(function () {
+        return self.allLocations().map(function (location) {
+            return location.category;
+        });
+    });
 
-    render: function () {
-        if (Octopus.hasNotificationMessage()) {
-            NotificationView.element.html(
-                '<p>' + Octopus.getNotificationMessage() + '</p>'
-            );
-            NotificationView.element.show();
+    self.isInSelectedCategory = function (location) {
+        if (!self.selectedCategory()) {
+            return true;
         } else {
-            NotificationView.element.hide();
+            return location.category == self.selectedCategory();
         }
-    }
-};
+    };
 
-var MapView = {
-    init: function () {
-        var bangkok = {
-            lat: 13.7455157,
-            lng: 100.5346039
-        };
+    self.filteredLocations = ko.pureComputed(function () {
+        return self.allLocations().filter(self.isInSelectedCategory);
+    });
 
-        MapView.map = new google.maps.Map(
-            $('.map').get(0), {
-                center: bangkok,
-                zoom: 13
+    ko.computed(function () {
+        self.allLocations().forEach(function (location) {
+            var marker = location.marker;
+
+            if (marker) {
+                if (self.isInSelectedCategory(location)) {
+                    marker.setMap(map);
+                    marker.setAnimation(google.maps.Animation.DROP);
+                } else {
+                    marker.setMap(null);
+                }
+            } else {
+                marker = new google.maps.Marker({
+                    animation: google.maps.Animation.DROP,
+                    map: map,
+                    position: location.position
+                });
+
+                marker.addListener('click', function () {
+                    self.selectedLocation(location);
+                });
+
+                location.marker = marker;
             }
-        );
-
-        MapView.markers = [];
-    },
-
-    render: function (locations) {
-        MapView.markers.forEach(function (marker) {
-            marker.setMap(null);
         });
-        MapView.markers = [];
+    });
 
-        locations().forEach(function (location) {
-            var marker = new google.maps.Marker({
-                position: location.position(),
-                animation: google.maps.Animation.DROP,
-                map: MapView.map
+    // Get recommended locations from Foursquare
+    $.ajax({
+            dataType: 'json',
+            url: 'https://api.foursquare.com/v2/venues/explore',
+            data: {
+                client_id: 'FOURSQUARE_CLIENT_ID',
+                client_secret: 'FOURSQUARE_CLIENT_SECRET',
+                near: 'Bangkok, Thailand',
+                v: '20180101'
+            }
+        })
+        .done(function (data) {
+            data.response.groups[0].items.forEach(function (item) {
+                self.allLocations.push(new Location(item))
             });
-
-            MapView.markers.push(marker);
+        })
+        .fail(function (xhr, status) {
+            console.log('Failed to load locations: ' + status);
         });
-    }
 };
+
 
 // Initialize
-Octopus.init();
+var map = new google.maps.Map(
+    $('.map').get(0), {
+        center: {
+            lat: 13.7455157,
+            lng: 100.5346039
+        },
+        zoom: 13
+    }
+);
+var viewModel = new ViewModel(map);
+ko.applyBindings(viewModel);
