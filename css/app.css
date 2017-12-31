@@ -49,37 +49,11 @@ a {
 }
 
 
-/* Top Navigation */
-
-.nav {
-    background-color: #d2d0d2;
-    border-bottom: 1px solid #b8b6b8;
-    color: #3a383a;
-    display: flex;
-    padding: 10px 20px;
-    height: 44px;
-}
-
-.nav-brand,
-.nav-right {
-    flex: 1 1 0;
-    line-height: 24px;
-}
-
-.nav-brand a {
-    color: #3a383a;
-}
-
-.nav-right {
-    text-align: right;
-}
-
-
 /* Main Content */
 
 .main {
     box-sizing: border-box;
-    height: calc(100% - 44px);
+    height: 100%;
 }
 
 .main-flex {
@@ -172,19 +146,7 @@ a {
 }
 
 @media (min-width: 768px) {
-    /* Top Navigation */
-
-    .nav {
-        align-items: center;
-        height: 5vh;
-    }
-
-
     /* Main Content */
-
-    .main {
-        height: 95vh;
-    }
 
     .main-flex {
         flex-direction: row;
