@@ -17,8 +17,12 @@
   </nav>
 
   <main class="main main-flex">
-    <section class="section section-first">
-      FIRST
+    <section class="section section-first" data-bind="with: LocationList">
+      <ul data-bind="foreach: locationList">
+        <li>
+          <a data-bind="text: name, click: handleClick"></a>
+        </li>
+      </ul>
     </section>
 
     <section class="section section-middle">
@@ -35,6 +39,7 @@
   </footer>
 
   <script src="https://maps.googleapis.com/maps/api/js?key=GOOGLE_MAPS_API_KEY"></script>
+  <script src="/js/knockout.min.js"></script>
   <script src="/js/jquery.min.js"></script>
   <script src="/js/app.js"></script>
 </body>

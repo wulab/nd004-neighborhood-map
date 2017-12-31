@@ -25,6 +25,7 @@ label {
 
 a {
     color: #2c7cf6;
+    cursor: pointer;
     text-decoration: none;
 }
 

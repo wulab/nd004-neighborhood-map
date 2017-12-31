@@ -1,11 +1,31 @@
+// Model
 var Notification = {
     message: null
 };
 
+var Location = function (data) {
+    this.name = ko.observable(data.name);
+};
+
+var LocationData = [{
+        name: 'Location 1'
+    },
+    {
+        name: 'Location 2'
+    },
+    {
+        name: 'Location 3'
+    }
+];
+
+// Octopus
 var Octopus = {
     init: function () {
         MapView.init();
         NotificationView.init();
+
+        ko.applyBindings(ViewModel);
+
         Octopus.notify('Welcome to APP_NAME!');
     },
 
@@ -24,9 +44,31 @@ var Octopus = {
             Notification.message = null;
             NotificationView.render();
         }, 3000);
+    },
+
+    getLocations: function () {
+        return Location.collection;
     }
 };
 
+// View Model
+var LocationListViewModel = function () {
+    var self = this;
+
+    self.locationList = ko.observableArray();
+    LocationData.forEach(function (data) {
+        self.locationList.push(new Location(data));
+    });
+
+    self.handleClick = function (location) {
+    };
+};
+
+var ViewModel = {
+    LocationList: LocationListViewModel
+};
+
+// View
 var NotificationView = {
     init: function () {
         NotificationView.element = $('.notification');
@@ -64,4 +106,5 @@ var MapView = {
     }
 };
 
+// Initialize
 Octopus.init();
