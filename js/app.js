@@ -23,6 +23,7 @@ var Location = function (data) {
 // View Model
 var ViewModel = function (map) {
     var self = this;
+    var listener;
 
     self.allLocations = ko.observableArray();
     self.selectedLocation = ko.observable();
@@ -62,7 +63,7 @@ var ViewModel = function (map) {
             location.marker.setAnimation(google.maps.Animation.BOUNCE);
             setTimeout(function () {
                 location.marker.setAnimation(null);
-            }, 1450);
+            }, 1400);
         }
     };
 
@@ -98,7 +99,13 @@ var ViewModel = function (map) {
             }
         });
 
-        map.fitBounds(latLngBounds);
+        google.maps.event.removeListener(listener);
+        listener = google.maps.event.addDomListener(window, 'resize', fitBounds);
+        fitBounds();
+
+        function fitBounds() {
+            map.fitBounds(latLngBounds);
+        }
     });
 
     // Get recommended locations from Foursquare
