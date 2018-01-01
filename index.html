@@ -12,13 +12,21 @@
 <body>
   <main class="main main-flex">
     <section class="section section-first">
-      <ul class="category-list" data-bind="foreach: allCategories">
+      <ul class="category-list">
         <li class="category">
-          <a data-bind="click: $parent.selectedCategory">
-            <img class="category-icon" data-bind="attr: {src: iconUrl}">
-            <span class="category-name" data-bind="text: name"></span>
+          <a data-bind="click: selectedCategory(undefined)">
+            <img src="" class="category-icon">
+            <span class="category-name">All Categories</span>
           </a>
         </li>
+        <!-- ko foreach: allCategories -->
+          <li class="category">
+            <a data-bind="click: $parent.selectedCategory">
+              <img class="category-icon" data-bind="attr: {src: iconUrl}">
+              <span class="category-name" data-bind="text: name"></span>
+            </a>
+          </li>
+        <!-- /ko -->
       </ul>
     </section>
 
@@ -29,7 +37,7 @@
     <section class="section section-last" data-bind="with: selectedLocation">
       <article class="location">
         <h2 class="location-name" data-bind="text: name"></h2>
-        <p class="location-category" data-bind="text: category"></p>
+        <p class="location-category" data-bind="text: category.name"></p>
         <p class="location-hours" data-bind="text: hours"></p>
         <article class="location-tip" data-bind="foreach: tips">
           <p class="location-tip-content" data-bind="text: content"></p>
