@@ -68,6 +68,10 @@ var ViewModel = function (map) {
 
                 marker.addListener('click', function () {
                     self.selectedLocation(location);
+                    marker.setAnimation(google.maps.Animation.BOUNCE);
+                    setTimeout(function() {
+                        marker.setAnimation(null);
+                    }, 1450);
                 });
 
                 location.marker = marker;
@@ -92,7 +96,7 @@ var ViewModel = function (map) {
             });
         })
         .fail(function (xhr, status) {
-            console.log('Failed to load locations: ' + status);
+            alert('Failed to load locations: ' + status);
         });
 };
 
