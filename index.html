@@ -14,7 +14,10 @@
     <section class="section section-first">
       <ul class="category-list" data-bind="foreach: allCategories">
         <li class="category">
-          <a class="category-name" data-bind="text: $data, click: $parent.selectedCategory"></a>
+          <a data-bind="click: $parent.selectedCategory">
+            <img class="category-icon" data-bind="attr: {src: iconUrl}">
+            <span class="category-name" data-bind="text: name"></span>
+          </a>
         </li>
       </ul>
     </section>

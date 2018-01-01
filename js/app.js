@@ -1,8 +1,12 @@
 // Model
 var Location = function (data) {
     var self = this;
+    var category = data.venue.categories[0];
+    self.category = {
+        name: category.name,
+        iconUrl: category.icon.prefix + '32' + category.icon.suffix
+    };
 
-    self.category = data.venue.categories[0].name;
     self.marker = null;
     self.name = data.venue.name;
     self.position = data.venue.location;

@@ -77,6 +77,7 @@ a {
 /* Category List */
 
 .category-list {
+    display: flex;
     margin: 0;
     margin-left: -5px;
     padding-left: 0;
@@ -86,6 +87,17 @@ a {
 .category-list>li {
     display: inline-block;
     padding: 0 10px;
+}
+
+.category-icon {
+    background-color: #2c7cf6;
+    border-radius: 4px;
+    height: 32px;
+    width: auto;
+}
+
+.category-name {
+    display: none;
 }
 
 
@@ -175,6 +187,7 @@ a {
     /* Category List */
 
     .category-list {
+        display: block;
         margin: 0;
         margin-top: -5px;
     }
@@ -182,6 +195,14 @@ a {
     .category-list>li {
         display: list-item;
         padding: 10px 0;
+    }
+
+    .category-icon {
+        display: none;
+    }
+
+    .category-name {
+        display: inline;
     }
 
 
