@@ -20,12 +20,12 @@
           </a>
         </li>
         <!-- ko foreach: allCategories -->
-          <li class="category">
-            <a data-bind="click: $parent.selectedCategory">
-              <img class="category-icon" data-bind="attr: {src: iconUrl}">
-              <span class="category-name" data-bind="text: name"></span>
-            </a>
-          </li>
+        <li class="category">
+          <a data-bind="click: $parent.selectedCategory">
+            <img class="category-icon" data-bind="attr: {src: iconUrl}">
+            <span class="category-name" data-bind="text: name"></span>
+          </a>
+        </li>
         <!-- /ko -->
       </ul>
     </section>
@@ -46,7 +46,12 @@
             <span data-bind="text: author"></span>
           </p>
         </article>
-        <footer>Powered by <a href="https://foursquare.com" target="_blank">Foursquare</a></footer>
+        <footer>
+          <p class="location-attribution">
+            Powered by
+            <a href="https://foursquare.com" target="_blank">Foursquare</a>
+          </p>
+        </footer>
       </article>
     </section>
   </main>

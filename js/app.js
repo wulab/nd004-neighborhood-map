@@ -49,6 +49,8 @@ var ViewModel = function (map) {
     });
 
     ko.computed(function () {
+        var latLngBounds = new google.maps.LatLngBounds();
+
         self.allLocations().forEach(function (location) {
             var marker = location.marker;
 
@@ -56,6 +58,7 @@ var ViewModel = function (map) {
                 if (self.isInSelectedCategory(location)) {
                     marker.setMap(map);
                     marker.setAnimation(google.maps.Animation.DROP);
+                    latLngBounds.extend(marker.getPosition());
                 } else {
                     marker.setMap(null);
                 }
@@ -68,6 +71,8 @@ var ViewModel = function (map) {
 
                 marker.addListener('click', function () {
                     self.selectedLocation(location);
+                    map.panTo(location.position);
+                    map.setZoom(15);
                     marker.setAnimation(google.maps.Animation.BOUNCE);
                     setTimeout(function() {
                         marker.setAnimation(null);
@@ -75,8 +80,11 @@ var ViewModel = function (map) {
                 });
 
                 location.marker = marker;
+                latLngBounds.extend(marker.getPosition());
             }
         });
+
+        map.fitBounds(latLngBounds);
     });
 
     // Get recommended locations from Foursquare
@@ -91,7 +99,8 @@ var ViewModel = function (map) {
             }
         })
         .done(function (data) {
-            data.response.groups[0].items.forEach(function (item) {
+            var items = data.response.groups[0].items;
+            items.forEach(function (item) {
                 self.allLocations.push(new Location(item))
             });
         })
@@ -108,7 +117,7 @@ var map = new google.maps.Map(
             lat: 13.7455157,
             lng: 100.5346039
         },
-        disableDefaultUI: true,
+        maxZoom: 15,
         zoom: 13
     }
 );
