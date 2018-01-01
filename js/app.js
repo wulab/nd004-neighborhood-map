@@ -2,12 +2,13 @@
 var Location = function (data) {
     var self = this;
     var category = data.venue.categories[0];
-    self.category = category.name;
 
+    self.category = category.name;
+    self.hours = data.venue.hours && data.venue.hours.status;
     self.marker = null;
     self.name = data.venue.name;
+    self.number = data.index + 1;
     self.position = data.venue.location;
-    self.hours = data.venue.hours && data.venue.hours.status;
     self.tips = [];
 
     data.tips.forEach(function (tip) {
@@ -83,6 +84,7 @@ var ViewModel = function (map) {
             } else {
                 marker = new google.maps.Marker({
                     animation: google.maps.Animation.DROP,
+                    label: String(location.number),
                     map: map,
                     position: location.position
                 });
@@ -112,7 +114,8 @@ var ViewModel = function (map) {
         })
         .done(function (data) {
             var items = data.response.groups[0].items;
-            items.forEach(function (item) {
+            items.forEach(function (item, index) {
+                item.index = index;
                 self.allLocations.push(new Location(item))
             });
         })

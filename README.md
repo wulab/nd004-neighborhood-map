@@ -1,6 +1,6 @@
 # Project: Neighborhood Map
 
-![screenshot](https://user-images.githubusercontent.com/592709/34465750-fd9f6928-eeee-11e7-94ac-bcaac64aaa8d.png)
+![screenshot](https://user-images.githubusercontent.com/592709/34468485-5e0c1df4-ef3c-11e7-9b33-496390ceb8cd.png)
 
 > A single page application featuring a map of my neighborhood
 

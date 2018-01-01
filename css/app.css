@@ -81,7 +81,7 @@ a {
 }
 
 
-/* Category List */
+/* Location List */
 
 .location-list {
     display: none;
@@ -113,7 +113,7 @@ a {
     margin: 0 0 10px 0;
 }
 
-.location-tip {
+.location-tips {
     margin: 20px 0;
 }
 

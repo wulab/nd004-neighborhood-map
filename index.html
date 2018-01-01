@@ -18,6 +18,7 @@
       <ol class="location-list" data-bind="foreach: filteredLocations">
         <li class="location-item">
           <a data-bind="click: $parent.handleLocationClick">
+            <span class="location-number" data-bind="text: number"></span>.
             <span class="location-name" data-bind="text: name"></span>
           </a>
         </li>
@@ -33,7 +34,7 @@
         <h2 class="location-name" data-bind="text: name"></h2>
         <p class="location-category" data-bind="text: category"></p>
         <p class="location-hours" data-bind="text: hours"></p>
-        <article class="location-tip" data-bind="foreach: tips">
+        <article class="location-tips" data-bind="foreach: tips">
           <p class="location-tip-content" data-bind="text: content"></p>
           <p class="location-tip-author">
             –
