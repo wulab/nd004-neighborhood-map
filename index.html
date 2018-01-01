@@ -31,11 +31,11 @@
     </section>
 
     <section class="section section-middle">
-      <div class="map"></div>
+      <div id="map"></div>
     </section>
 
-    <section class="section section-last" data-bind="with: selectedLocation">
-      <article class="location">
+    <section class="section section-last">
+      <article class="location" data-bind="with: selectedLocation">
         <h2 class="location-name" data-bind="text: name"></h2>
         <p class="location-category" data-bind="text: category.name"></p>
         <p class="location-hours" data-bind="text: hours"></p>
@@ -62,10 +62,10 @@
     </div>
   </footer>
 
-  <script src="https://maps.googleapis.com/maps/api/js?key=GOOGLE_MAPS_API_KEY"></script>
-  <script src="/js/knockout.min.js"></script>
-  <script src="/js/jquery.min.js"></script>
+  <script src="/js/jquery.min.js" async defer></script>
+  <script src="/js/knockout.min.js" async defer></script>
   <script src="/js/app.js"></script>
+  <script src="https://maps.googleapis.com/maps/api/js?key=GOOGLE_MAPS_API_KEY&callback=initMap" async defer onerror="handleMapError()"></script>
 </body>
 
 </html>

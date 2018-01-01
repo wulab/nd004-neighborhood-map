@@ -48,6 +48,7 @@ var ViewModel = function (map) {
         return self.allLocations().filter(self.isInSelectedCategory);
     });
 
+    // Create or update map markers when selected category changes
     ko.computed(function () {
         var latLngBounds = new google.maps.LatLngBounds();
 
@@ -74,7 +75,7 @@ var ViewModel = function (map) {
                     map.panTo(location.position);
                     map.setZoom(15);
                     marker.setAnimation(google.maps.Animation.BOUNCE);
-                    setTimeout(function() {
+                    setTimeout(function () {
                         marker.setAnimation(null);
                     }, 1450);
                 });
@@ -105,21 +106,33 @@ var ViewModel = function (map) {
             });
         })
         .fail(function (xhr, status) {
-            alert('Failed to load locations: ' + status);
+            alert('Failed to load data from Foursquare');
         });
 };
 
 
-// Initialize
-var map = new google.maps.Map(
-    $('.map').get(0), {
-        center: {
-            lat: 13.7455157,
-            lng: 100.5346039
-        },
-        maxZoom: 15,
-        zoom: 13
-    }
-);
-var viewModel = new ViewModel(map);
-ko.applyBindings(viewModel);
+// Called when Google Maps script finish executing
+function initMap() {
+    // Render map to div#map element
+    var map = new google.maps.Map(
+        document.getElementById('map'), {
+            center: {
+                lat: 13.7455157,
+                lng: 100.5346039
+            },
+            maxZoom: 17,
+            zoom: 13
+        }
+    );
+
+
+    // Initialize KnockoutJS
+    var viewModel = new ViewModel(map);
+    ko.applyBindings(viewModel);
+}
+
+
+// Notify user when Google Maps script fails to load
+function handleMapError() {
+    alert('Failed to load Google Maps');
+}
