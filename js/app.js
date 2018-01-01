@@ -104,6 +104,7 @@ var map = new google.maps.Map(
             lat: 13.7455157,
             lng: 100.5346039
         },
+        disableDefaultUI: true,
         zoom: 13
     }
 );
