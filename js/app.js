@@ -2,10 +2,7 @@
 var Location = function (data) {
     var self = this;
     var category = data.venue.categories[0];
-    self.category = {
-        name: category.name,
-        iconUrl: category.icon.prefix + '32' + category.icon.suffix
-    };
+    self.category = category.name;
 
     self.marker = null;
     self.name = data.venue.name;
@@ -28,16 +25,23 @@ var ViewModel = function (map) {
 
     self.allLocations = ko.observableArray();
     self.selectedLocation = ko.observable();
-    self.selectedCategory = ko.observable();
+    self.selectedCategory = ko.observable('All Categories');
 
     self.allCategories = ko.pureComputed(function () {
-        return self.allLocations().map(function (location) {
-            return location.category;
+        var categories = ['All Categories'];
+        var locations = self.allLocations();
+
+        locations.forEach(function (location) {
+            if (categories.indexOf(location.category) === -1) {
+                categories.push(location.category)
+            }
         });
+
+        return categories.sort();
     });
 
     self.isInSelectedCategory = function (location) {
-        if (!self.selectedCategory()) {
+        if (self.selectedCategory() == 'All Categories') {
             return true;
         } else {
             return location.category == self.selectedCategory();
@@ -47,6 +51,19 @@ var ViewModel = function (map) {
     self.filteredLocations = ko.pureComputed(function () {
         return self.allLocations().filter(self.isInSelectedCategory);
     });
+
+    self.handleLocationClick = function (location) {
+        self.selectedLocation(location);
+        map.panTo(location.position);
+        map.setZoom(15);
+
+        if (location.marker) {
+            location.marker.setAnimation(google.maps.Animation.BOUNCE);
+            setTimeout(function () {
+                location.marker.setAnimation(null);
+            }, 1450);
+        }
+    };
 
     // Create or update map markers when selected category changes
     ko.computed(function () {
@@ -71,13 +88,7 @@ var ViewModel = function (map) {
                 });
 
                 marker.addListener('click', function () {
-                    self.selectedLocation(location);
-                    map.panTo(location.position);
-                    map.setZoom(15);
-                    marker.setAnimation(google.maps.Animation.BOUNCE);
-                    setTimeout(function () {
-                        marker.setAnimation(null);
-                    }, 1450);
+                    self.handleLocationClick(location);
                 });
 
                 location.marker = marker;

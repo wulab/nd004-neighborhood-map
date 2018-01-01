@@ -12,22 +12,16 @@
 <body>
   <main class="main main-flex">
     <section class="section section-first">
-      <ul class="category-list">
-        <li class="category">
-          <a data-bind="click: selectedCategory(undefined)">
-            <img src="" class="category-icon">
-            <span class="category-name">All Categories</span>
+      <div class="field category-field">
+        <select class="input" data-bind="options: allCategories, value: selectedCategory"></select>
+      </div>
+      <ol class="location-list" data-bind="foreach: filteredLocations">
+        <li class="location-item">
+          <a data-bind="click: $parent.handleLocationClick">
+            <span class="location-name" data-bind="text: name"></span>
           </a>
         </li>
-        <!-- ko foreach: allCategories -->
-        <li class="category">
-          <a data-bind="click: $parent.selectedCategory">
-            <img class="category-icon" data-bind="attr: {src: iconUrl}">
-            <span class="category-name" data-bind="text: name"></span>
-          </a>
-        </li>
-        <!-- /ko -->
-      </ul>
+      </ol>
     </section>
 
     <section class="section section-middle">
@@ -37,7 +31,7 @@
     <section class="section section-last">
       <article class="location" data-bind="with: selectedLocation">
         <h2 class="location-name" data-bind="text: name"></h2>
-        <p class="location-category" data-bind="text: category.name"></p>
+        <p class="location-category" data-bind="text: category"></p>
         <p class="location-hours" data-bind="text: hours"></p>
         <article class="location-tip" data-bind="foreach: tips">
           <p class="location-tip-content" data-bind="text: content"></p>
